@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Management.Domain.Models;
@@ -10,6 +11,7 @@ namespace Management.Application
 {
     public class StudentService
     {
+        private int index = 0;
         public DbContext DbContext { get; set; }
         public StudentService()
         {
@@ -17,6 +19,9 @@ namespace Management.Application
         }
         public void AddStudent(string firstName, string lastName)
         {
+            if (index >= DbContext.Students.Length)
+                return;
+
             Student newStudent = new Student
             {
                 Id = new Random().Next(1, 1000).ToString(),
@@ -24,7 +29,13 @@ namespace Management.Application
                 LastName = lastName
             };
 
-            this.DbContext.Students[0] = newStudent;
+            this.DbContext.Students[index] = newStudent;
+            index++;
+        }
+
+        public Student[] GetStudents()
+        {
+            return DbContext.Students;
         }
 
     }
