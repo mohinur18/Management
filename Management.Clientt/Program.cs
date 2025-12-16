@@ -1,5 +1,6 @@
 ﻿
 using Management.Application;
+using Management.Domain.Models;
 
 namespace Management.Clientt
 {
@@ -41,7 +42,12 @@ namespace Management.Clientt
                 case 1:
                     AddStudent();
                     break;
-
+                case 2:
+                    PrintAllStudent();
+                    break;
+                case 3:
+                    PrintStudentCapasity();
+                    break;
 
             }
 
@@ -56,6 +62,24 @@ namespace Management.Clientt
 
             studentService.AddStudent(fristName, lastName);
             Console.WriteLine("Zo'r, kiritildi!");
+        }
+
+        private static void PrintAllStudent()
+        {
+            Student[] students = studentService.GetStudents();
+            foreach (Student student in students)
+            {
+                if (student == null)
+                {
+                    continue;
+                }
+                Console.WriteLine($"Student Id: {student.Id} Name: {student.FirstName} {student.LastName}");
+            }
+        }
+
+        private static void PrintStudentCapasity()
+        {
+            Console.WriteLine($"Bizda {studentService.StudentsCapasity()} qabul bor.");
         }
     }
 }
