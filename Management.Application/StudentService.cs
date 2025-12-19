@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Management.Domain.Models;
+﻿using Management.Domain.Models;
 using Management.Infrastructure.Data;
+using System;
 
 namespace Management.Application
 {
     public class StudentService
     {
-        private int index = 0;
         public DbContext DbContext { get; set; }
         public StudentService()
         {
@@ -19,7 +13,7 @@ namespace Management.Application
         }
         public void AddStudent(string firstName, string lastName)
         {
-            if (index >= DbContext.Students.Length)
+            if (DbContext.StudentCount >= DbContext.Students.Length)
                 return;
 
             Student newStudent = new Student
@@ -29,8 +23,8 @@ namespace Management.Application
                 LastName = lastName
             };
 
-            this.DbContext.Students[index] = newStudent;
-            index++;
+            this.DbContext.Students[DbContext.StudentCount] = newStudent;
+            DbContext.StudentCount++;
         }
 
         public Student[] GetStudents()
@@ -38,5 +32,9 @@ namespace Management.Application
             return DbContext.Students;
         }
 
+        public int GetAvailableCapacity()
+        {
+            return DbContext.Students.Length - DbContext.StudentCount;
+        }
     }
 }

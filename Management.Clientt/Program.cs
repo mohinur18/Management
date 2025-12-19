@@ -1,5 +1,6 @@
 ﻿
 using Management.Application;
+using Management.Domain.Models;
 
 namespace Management.Clientt
 {
@@ -13,41 +14,76 @@ namespace Management.Clientt
         {
             Console.WriteLine("Salom!!!");
 
+            bool isPasswordCorrect = false;
             int count = 0;
-            do
+            while(count < 3 && !isPasswordCorrect)
             {
-                Console.WriteLine("Parol kiring");
-
+                Console.WriteLine("Parolni kiriting: ");
                 string password = Console.ReadLine();
                 if (password == PASSWORD)
                 {
-                    ShowStudentMenu();
+                    isPasswordCorrect = true;
+                }
+                else
+                {
+                    count++;
+                    if(count < 3)
+                    {
+                        Console.WriteLine($"Noto'g'ri parol. Qolgan urinishlar soni: {3 - count}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Urinishlar soni tugadi. The end...");
+                        return;
+                    }
                 }
             }
-            while (count++ < 3);
-
+            if(isPasswordCorrect)
+            {
+                ShowStudentMenu();
+            }
         }
 
         public static void ShowStudentMenu()
         {
-            Console.WriteLine("Menulardan birini tanlang:\n" +
-                "1.Student qo'shish\n" +
-                "2.studentlarni ko'rish\n" +
-                "3.Qabul soni");
-
-            int choice = int.Parse(Console.ReadLine());
-            switch (choice)
+            while (true)
             {
-                case 1:
-                    AddStudent();
-                    break;
+                Console.WriteLine("Menulardan birini tanlang:\n" +
+                    "1.Student qo'shish\n" +
+                    "2.studentlarni ko'rish\n" +
+                    "3.Qabul soni\n" +
+                    "4. Chiqish");
 
-
+                int choice = int.Parse(Console.ReadLine());
+                switch (choice)
+                {
+                    case 1:
+                        AddStudent();
+                        break;
+                    case 2:
+                        PrintAllStudent();
+                        break;
+                    case 3:
+                        PrintStudentCapacity();
+                        break;
+                    case 4:
+                        Console.WriteLine("Chiqilmoqda... ");
+                        return;
+                    default:
+                        Console.WriteLine("Error!!!");
+                        break;
+                }
             }
 
         }
         private static void AddStudent()
         {
+            int boshjoy = studentService.GetAvailableCapacity();
+            if(boshjoy<=0)
+            {
+                Console.WriteLine("Afsuski, qabulda bo'sh joy qolmagan!");
+                return;
+            }
             Console.Write("Ismingizni kiring:");
             string fristName = Console.ReadLine();
 
@@ -56,6 +92,24 @@ namespace Management.Clientt
 
             studentService.AddStudent(fristName, lastName);
             Console.WriteLine("Zo'r, kiritildi!");
+        }
+
+        private static void PrintAllStudent()
+        {
+            Student[] students = studentService.GetStudents();
+            foreach (Student student in students)
+            {
+                if (student == null)
+                {
+                    continue;
+                }
+                Console.WriteLine($"Student Id: {student.Id} Name: {student.FirstName} {student.LastName}");
+            }
+        }
+
+        private static void PrintStudentCapacity()
+        {
+            Console.WriteLine($"Bizda {studentService.GetAvailableCapacity()} qabul bor.");
         }
     }
 }
