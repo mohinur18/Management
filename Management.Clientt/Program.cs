@@ -48,11 +48,15 @@ namespace Management.Clientt
         {
             while (true)
             {
-                Console.WriteLine("Menulardan birini tanlang:\n" +
-                    "1.Student qo'shish\n" +
-                    "2.studentlarni ko'rish\n" +
-                    "3.Qabul soni\n" +
-                    "4. Chiqish");
+                case 1:
+                    AddStudent();
+                    break;
+                case 2:
+                    PrintAllStudent();
+                    break;
+                case 3:
+                    PrintStudentCapasity();
+                    break;
 
                 int choice = int.Parse(Console.ReadLine());
                 switch (choice)
