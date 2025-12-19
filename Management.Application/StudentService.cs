@@ -38,5 +38,10 @@ namespace Management.Application
             return DbContext.Students;
         }
 
+        public int StudentsCapasity()
+        {
+            return DbContext.Students.Length;
+        }
+
     }
 }
